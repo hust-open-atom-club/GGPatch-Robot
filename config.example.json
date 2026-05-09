@@ -1,0 +1,9 @@
+{
+    "username": "ktestrobot@126.com",
+    "password": "",
+    "procs": 20,
+    "interval": 20,
+    "whiteLists": [
+    ],
+    "mailingList": "kernel_testing_robot@googlegroups.com"
+}

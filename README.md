@@ -1,49 +1,61 @@
-# KTestRobot
+# ggpatch-robot
 
-## Installation
+Automated Linux kernel patch testing bot for Google Groups. Monitors a Google Group via IMAP, runs a pipeline of static analysis checks against `mainline` and `linux-next` kernel trees, and replies with results via SMTP.
 
-### Install Go
+## Prerequisites
 
-Download the golang package (`go1.20.5.linux-amd64.tar.gz`) and execute the following command:
+- Go 1.23+
+- `git`, `make`, `cppcheck`
+- [smatch](http://repo.or.cz/w/smatch.git) (cloned automatically)
+- A subscribed email address for the target Google Group
 
-```
-# rm -rf /usr/local/go && tar -C /usr/local -xzf go1.20.5.linux-amd64.tar.gz
-```
+## Quick Start
 
-<!-- ### Install packages for kernel compilation
-
-```
-sudo apt-get install build-essential make libncurses5-dev flex libssl-dev libelf-dev bison
-```
-
-### Install other dependencies
-
-```
-sudo apt-get install git sqlite3 libsqlite3-dev
-sudo apt-get install libtry-tiny-perl tofrodos cppcheck ocaml coccinelle
-``` -->
-
-## Complete config.json
-
-Fill in the config.json file with sensitive information such as SMTP and IMAP server details, username, password, and a list of email addresses whitelist for filtering.
-
-## Building
-
-```
-git clone https://gitee.com/dzm91_hust/KTestRobot
-cd KTBot
+```bash
+cp config.example.json config.json
+# Fill in email credentials, whitelists in config.json
 make
-./KTestRobot -config config.json
+./ggpatch-robot -config config.json
 ```
 
-## Configuration Explanation
+## Configuration
 
-The `config.json` file contains the following fields:
+`config.json` fields:
 
-- `username`: The email account used to receive kernel patches. This field should be set to a email address, e.g., "ktestrobot@126.com"
-- `password`: The password used to log in the mail server. This field should be set to the email password
-- `procs`: The number of processes used for kernel compilation. This field should be set to a number. The default value is 20.
-- `interval`: The number of minites between two checks of the mail. This field should be set to a number. The default value is 20.
-- `whiteLists`: A list of email addresses that are considered as white-listed recipients. This field should be set to an array of email addresses
-- `mailinglist`: The mail list used to test the patch. This field should be set to a email address. The default value is "kernel_testing_robot@googlegroups.com"
+| Field | Description | Default |
+| --- | --- | --- |
+| `username` | Email account for IMAP/SMTP (e.g., `robot@126.com`) | — |
+| `password` | Email password | — |
+| `procs` | Parallel jobs for kernel compilation | `20` |
+| `interval` | Minutes between inbox checks | `20` |
+| `whiteLists` | Allowed recipient address patterns | `[]` |
+| `mailingList` | CC address for reply emails | `kernel_testing_robot@googlegroups.com` |
 
+Supported email domains: `126.com`, `hust.edu.cn`.
+
+## Checker Pipeline
+
+1. **CheckPatchPl** — `scripts/checkpatch.pl` on the patch
+2. **ApplyCheck** — `git apply --check` on `linux-next`, fallback to `mainline`
+3. **BuildCheck** — `make -jN` incremental build
+4. **Smatch** — before/after static analysis with smatch
+5. **Coccicheck** — before/after with coccinelle
+6. **Cppcheck** — before/after with cppcheck
+
+Patches with a `Reviewed-by:` tag or non-whitelisted recipients are skipped. The pipeline stops at the first gate failure.
+
+## Architecture
+
+```text
+cmd/ggpatch-robot/main.go
+internal/
+  config/       # config.json parsing & validation
+  mail/         # IMAP receive, SMTP send, patch extraction
+  kernel/       # git clone/pull/build/apply/revert
+  checker/      # Checker interface, pipeline, each checker tool
+  engine/       # main loop orchestration
+```
+
+## License
+
+Apache-2.0
