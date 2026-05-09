@@ -130,7 +130,7 @@ dmypy.json
 
 # project-related
 config.json
-mainline
+linux
 linux-next
 patch/
 log/

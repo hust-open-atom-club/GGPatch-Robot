@@ -26,8 +26,8 @@ func (m *Manager) ClonePulls(ctx context.Context, workDir string) error {
 		name string
 		url  string
 	}{
-		{"mainline", "https://mirrors.hust.college/git/linux.git"},
-		{"linux-next", "https://mirrors.hust.college/git/linux-next.git"},
+		{"mainline", "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git"},
+		{"linux-next", "https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git"},
 	}
 
 	for _, d := range dirs {
