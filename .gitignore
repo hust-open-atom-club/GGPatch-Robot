@@ -129,13 +129,7 @@ dmypy.json
 .pyre/
 
 # project-related
-KTBot/config.json
-KTBot/KTestRobot
-KTBot/smatch
-KTBot/mainline
-KTBot/linux-next
 config.json
-ggpatch-robot
 smatch
 mainline
 linux-next
