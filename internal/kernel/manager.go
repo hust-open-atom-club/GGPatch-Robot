@@ -42,18 +42,8 @@ func (m *Manager) cloneOrPull(ctx context.Context, workDir, name, url string) er
 	repoPath := filepath.Join(workDir, name)
 	if err := run(ctx, workDir, "ls", "-l", name); err != nil {
 		slog.Info("cloning", "repo", name, "url", url)
-		cloneURL := url
-		if name == "mainline" {
-			if err := run(ctx, workDir, "git", "clone", "--depth=1", url); err != nil {
-				return fmt.Errorf("clone: %w", err)
-			}
-			if err := run(ctx, workDir, "mv", "linux", name); err != nil {
-				return fmt.Errorf("rename: %w", err)
-			}
-		} else {
-			if err := run(ctx, workDir, "git", "clone", "--depth=1", cloneURL, name); err != nil {
-				return fmt.Errorf("clone: %w", err)
-			}
+		if err := run(ctx, workDir, "git", "clone", "--depth=1", url, name); err != nil {
+			return fmt.Errorf("clone: %w", err)
 		}
 		return nil
 	}

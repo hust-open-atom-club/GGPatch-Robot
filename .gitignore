@@ -130,7 +130,8 @@ dmypy.json
 
 # project-related
 config.json
-linux
+mainline
 linux-next
 patch/
 log/
+ggpatch-robot
