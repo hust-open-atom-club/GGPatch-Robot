@@ -34,11 +34,10 @@ func main() {
 	recv := mail.NewIMAPReceiver(cfg.IMAP.Server, cfg.IMAP.Port, cfg.IMAP.Username, cfg.IMAP.Password)
 	send := mail.NewSMTPSender(cfg.SMTP.Server, cfg.SMTP.Port, cfg.SMTP.Username, cfg.SMTP.Password)
 
-	smatch := checker.NewSmatch(mgr)
 	cocci := checker.NewCoccicheck(mgr)
 	cppcheck := checker.NewCppcheck(mgr)
 
-	eng := engine.New(cfg, recv, send, mgr, smatch, cocci, cppcheck)
+	eng := engine.New(cfg, recv, send, mgr, cocci, cppcheck)
 
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()

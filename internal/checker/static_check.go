@@ -10,22 +10,6 @@ import (
 	"ggpatch-robot/internal/kernel"
 )
 
-type Smatch struct {
-	mgr *kernel.Manager
-}
-
-func NewSmatch(mgr *kernel.Manager) *Smatch {
-	return &Smatch{mgr: mgr}
-}
-
-func (c *Smatch) Name() string { return "Smatch" }
-
-func (c *Smatch) Check(ctx context.Context, patchPath, branch, workDir string) Result {
-	return staticCheck(ctx, c.Name(), patchPath, branch, workDir, c.mgr,
-		"warn", "error", nil,
-		filepath.Join(workDir, "smatch", "smatch_scripts", "kchecker"))
-}
-
 func staticCheck(ctx context.Context, name, patchPath, branch, workDir string, mgr *kernel.Manager,
 	warnKey, errKey string, pathFn func(string) string, checker string, checkerArgs ...string) Result {
 

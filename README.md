@@ -6,7 +6,6 @@ Automated Linux kernel patch testing bot for Google Groups. Monitors a Google Gr
 
 - Go 1.23+
 - `git`, `make`, `cppcheck`
-- [smatch](http://repo.or.cz/w/smatch.git) (cloned automatically)
 - A subscribed email address for the target Google Group
 
 ## Quick Start
@@ -38,9 +37,8 @@ Supported email domains: `126.com`, `hust.edu.cn`.
 1. **CheckPatchPl** — `scripts/checkpatch.pl` on the patch
 2. **ApplyCheck** — `git apply --check` on `linux-next`, fallback to `mainline`
 3. **BuildCheck** — `make -jN` incremental build
-4. **Smatch** — before/after static analysis with smatch
-5. **Coccicheck** — before/after with coccinelle
-6. **Cppcheck** — before/after with cppcheck
+4. **Coccicheck** — before/after with coccinelle
+5. **Cppcheck** — before/after with cppcheck
 
 Patches with a `Reviewed-by:` tag or non-whitelisted recipients are skipped. The pipeline stops at the first gate failure.
 

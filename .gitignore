@@ -130,7 +130,6 @@ dmypy.json
 
 # project-related
 config.json
-smatch
 mainline
 linux-next
 patch/

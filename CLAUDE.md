@@ -23,7 +23,7 @@ cmd/ggpatch-robot/main.go          # entry point, wires dependencies
 internal/
   config/       # parse & validate config.json, defaults
   mail/         # IMAP receiver, SMTP sender, patch extraction from email body
-  kernel/       # clone/pull/build/apply/revert for kernel + smatch repos
+  kernel/       # clone/pull/build/apply/revert for kernel repos
   checker/      # Checker interface, pipeline orchestration, each checker, Logcmp
   engine/       # main loop: init → poll → process → check → send → sleep
 ```
@@ -31,10 +31,10 @@ internal/
 ### Data Flow
 
 1. `config.Load()` parses config.json, resolves email server settings from domain
-2. `Engine.Run()` initializes: creates `patch/`/`log/` dirs, clones & builds mainline, linux-next, smatch
+2. `Engine.Run()` initializes: creates `patch/`/`log/` dirs, clones & builds mainline, linux-next
 3. Main loop: IMAP `Receive()` → `update()` repos → for each `[PATCH*` email:
    - `PatchExtract()` filters whitelist/Reviewed-by, extracts patch body + changed paths
-   - Checker pipeline: `CheckPatchPl` → `ApplyCheck` (linux-next, fallback mainline) → `BuildCheck` → `StaticAnalysis` (Smatch, Coccicheck, Cppcheck)
+   - Checker pipeline: `CheckPatchPl` → `ApplyCheck` (linux-next, fallback mainline) → `BuildCheck` → `StaticAnalysis` (Coccicheck, Cppcheck)
    - SMTP `Send()` reply with report
 4. Static checkers do before/after diff: run tool, apply patch, run again, revert, `Logcmp()`
 

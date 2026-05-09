@@ -45,7 +45,6 @@ func New(
 	recv receiver,
 	send sender,
 	mgr *kernel.Manager,
-	smatch *checker.Smatch,
 	cocci *checker.Coccicheck,
 	cppcheck *checker.Cppcheck,
 ) *Engine {
@@ -57,7 +56,7 @@ func New(
 		checkPatchPl: &checker.CheckPatchPl{},
 		applyCheck:   checker.NewApplyCheck(mgr),
 		buildCheck:   checker.NewBuildCheck(mgr),
-		checkers:     []checkerInterface{smatch, cocci, cppcheck},
+		checkers:     []checkerInterface{cocci, cppcheck},
 	}
 }
 

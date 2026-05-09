@@ -20,7 +20,7 @@ func NewManager(procs int) *Manager {
 	return &Manager{procs: procs}
 }
 
-// ClonePulls ensures mainline, linux-next, and smatch repos exist and are up to date.
+// ClonePulls ensures mainline and linux-next repos exist and are up to date.
 func (m *Manager) ClonePulls(ctx context.Context, workDir string) error {
 	dirs := []struct {
 		name string
@@ -28,7 +28,6 @@ func (m *Manager) ClonePulls(ctx context.Context, workDir string) error {
 	}{
 		{"mainline", "https://mirrors.hust.college/git/linux.git"},
 		{"linux-next", "https://mirrors.hust.college/git/linux-next.git"},
-		{"smatch", "git://repo.or.cz/smatch.git"},
 	}
 
 	for _, d := range dirs {
@@ -115,11 +114,6 @@ func (m *Manager) RunScript(ctx context.Context, dir, script string, args ...str
 	cmd.Dir = dir
 	out, err := cmd.CombinedOutput()
 	return string(out), err
-}
-
-// Checkers returns the path to smatch kchecker and coccinelle for a branch.
-func (m *Manager) SmatchDir(workDir string) string {
-	return filepath.Join(workDir, "smatch")
 }
 
 func run(ctx context.Context, dir, name string, args ...string) error {
